@@ -89,7 +89,7 @@ jobs:
         --set secrets.DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
         --set todoapp.secrets.DB_USER="${{ secrets.DB_USER }}" \
         --set todoapp.secrets.DB_HOST="${{ secrets.DB_HOST }}" \
-        --set todoapp.image.version="${{ inputs.helm-release-name }}"
+        --set todoapp.image.version="${{ inputs.helm-release-name }}" \
         --set global.environment="${{inputs.environment}}"
 
 
