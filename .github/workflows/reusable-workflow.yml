@@ -35,7 +35,7 @@ jobs:
 
    - uses: actions/download-artifact@v4
      with:
-       name: helm-artifact
+       name: helm-artifacts
        path: .
 
    - name: Set up Helm
