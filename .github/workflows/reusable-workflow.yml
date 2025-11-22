@@ -37,6 +37,11 @@ jobs:
      with:
        name: helm-artifacts
        path: .
+  
+   - uses: actions/download-artifact@v4
+     with:
+       name: cluster-config
+       path: .
 
    - name: Set up Helm
      uses: azure/setup-helm@v4.2.0
@@ -45,7 +50,7 @@ jobs:
      uses: azure/setup-kubectl@v4
     
    - name: Create cluster
-     uses: helm/kind-acrion@v1
+     uses: helm/kind-action@v1
      with:
         config: ./cluster.yml
 
