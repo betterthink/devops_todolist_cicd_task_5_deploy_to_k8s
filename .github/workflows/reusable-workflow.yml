@@ -54,16 +54,6 @@ jobs:
      with:
         config: ./cluster.yml
 
-  
-   - uses: azure/login@v2
-     with:
-      creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-   - uses: azure/aks-set-context@v3
-     with:
-      cluster-name: ${{ vars.AZURE_CLUSTER_NAME }}
-      resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
-
    - name: Dry run Helm
      run: |
       helm install --dry-run ${{ inputs.helm-release-name }} ./todoapp-*.tgz  \
@@ -71,25 +61,24 @@ jobs:
       --set mysql.secrets.MYSQL_ROOT_PASSWORD="${{ secrets.MYSQL_ROOT_PASSWORD }}" \
       --set mysql.secrets.MYSQL_USER="${{ secrets.MYSQL_USER }}" \
       --set mysql.secrets.MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
-      --set todoapp.secrets.SECRET_KEY="${{ secrets.SECRET_KEY }}" \
       --set todoapp.secrets.DB_NAME="${{ secrets.DB_NAME }}" \
       --set todoapp.secrets.DB_USER="${{ secrets.DB_USER }}" \
       --set todoapp.secrets.DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
       --set todoapp.secrets.DB_HOST="${{ secrets.DB_HOST }}" \
       --set todoapp.image.tag="${{ inputs.version }}"
   
-   - name: Deploy Helm to Development
+   - name: Deploy Helm Chart
      run: |
         helm upgrade --install --atomic --wait --timeout 3600s --debug ${{ inputs.helm-release-name}} ./todoapp-*.tgz \
         -f ${{ inputs.helm-values-path }} \
         --set mysql.secrets.MYSQL_ROOT_PASSWORD="${{ secrets.MYSQL_ROOT_PASSWORD }}" \
         --set mysql.secrets.MYSQL_USER="${{ secrets.MYSQL_USER }}" \
         --set mysql.secrets.MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
-        --set secrets.DB_NAME="${{ secrets.DB_NAME }}" \
-        --set secrets.DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+        --set todoapp.secrets.DB_NAME="${{ secrets.DB_NAME }}" \
+        --set todoapp.secrets.DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
         --set todoapp.secrets.DB_USER="${{ secrets.DB_USER }}" \
         --set todoapp.secrets.DB_HOST="${{ secrets.DB_HOST }}" \
-        --set todoapp.image.version="${{ inputs.helm-release-name }}" \
+        --set todoapp.image.version="${{ inputs.version }}" \
         --set global.environment="${{inputs.environment}}"
 
 
